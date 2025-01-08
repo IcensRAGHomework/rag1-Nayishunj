@@ -44,7 +44,7 @@ def generate_hw01(question):
     llm = get_llm()
 
     prompt_template = """
-    你是台灣人，請回答台灣特定月份的紀念日有哪些，請按以下json格式呈現(不要加```json):
+    你是台灣人，請回答台灣特定月份的紀念日有哪些，請按以下json格式呈現，且只保留一項(不要加```json):
      {
          "Result":
              {
