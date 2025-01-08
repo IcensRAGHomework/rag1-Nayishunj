@@ -19,6 +19,7 @@ from langchain_core.chat_history import BaseChatMessageHistory
 from langchain_core.runnables.history import RunnableWithMessageHistory
 import base64
 from mimetypes import guess_type
+from langchain_core.output_parsers import JsonOutputParser
 
 gpt_chat_version = 'gpt-4o'
 gpt_config = get_model_configuration(gpt_chat_version)
@@ -44,7 +45,6 @@ def generate_hw01(question):
 
     prompt_template = """
     你是台灣人，請回答台灣特定月份的紀念日有哪些，請按以下json格式呈現:
-    ```json
      {
          "Result":
              {
@@ -52,7 +52,6 @@ def generate_hw01(question):
                  "name": "测试日"
              }
      }
-     ```
     """
     messages = [
         SystemMessage(content=prompt_template),
@@ -62,8 +61,9 @@ def generate_hw01(question):
     ]
 
     response = llm.invoke(messages)
-    print(response.content)
-    return response.content
+    res = str(response.content)
+    print(res)
+    return res
 
 @tool
 def get_memorial_days(month):
@@ -83,7 +83,6 @@ def generate_hw02(question):
     llm_with_tools = llm.bind_tools(tools)
     prompt_template = """
         你是一個厲害的助手, 但你不知道台灣的紀念日。請用中文並按以下json格式呈現結果:
-        ```json
         {
             "Result": [
                 {
@@ -108,7 +107,6 @@ def generate_hw02(question):
                 }
             ]
         }
-        ```
         """
     prompt = ChatPromptTemplate.from_messages([
         SystemMessage(content=prompt_template),
@@ -138,8 +136,9 @@ def generate_hw02(question):
         {"input": question},
         config={"configurable": {"session_id": session_id}},
     )
-    print(response['output'])
-    return response['output']
+    res = str(response['output'])
+    print(res)
+    return res
 
 def get_session_history(session_id: str) -> BaseChatMessageHistory:
     if session_id not in store:
@@ -153,7 +152,6 @@ def generate_hw03(question2, question3):
     你是一個厲害的助手, 請按以下json格式呈現:
     - add : 這是一個布林值，表示是否需要將節日新增到節日清單中。根據問題判斷該節日是否存在於清單中，如果不存在，則為 true；否則為 false。
     - reason : 描述為什麼需要或不需要新增節日，具體說明是否該節日已經存在於清單中，以及當前清單的內容。
-    ```json
      {
          "Result":
              {
@@ -161,7 +159,6 @@ def generate_hw03(question2, question3):
                  "reason": "蔣中正誕辰紀念日並未包含在十月的節日清單中。目前十月的現有節日包括國慶日、重陽節、華僑節、台灣光復節和萬聖節。因此，如果該日被認定為節日，應該將其新增至清單中。"
              }
      }
-     ```
     """
     prompt = ChatPromptTemplate.from_messages([
         SystemMessage(content=prompt_template),
@@ -191,8 +188,9 @@ def generate_hw03(question2, question3):
             {'input': question3},
             config={"configurable": {"session_id": session_id}},
         )
-    print(response['output'])
-    return response['output']
+    res = str(response['output'])
+    print(res)
+    return res
 
 def local_image_to_data_url(image_path):
     # Guess the MIME type of the image based on the file extension
@@ -210,17 +208,13 @@ def local_image_to_data_url(image_path):
 def generate_hw04(question):
     image_path = 'baseball.png'
     data_url = local_image_to_data_url(image_path)
-    prompt_template = """
-    你是一個厲害的助手, 並按以下json格式呈現:
-    - score : 描述圖片裡的分數。
-    ```json
+    prompt_template = """ 你是一個厲害的助手, 請按以下json格式呈現(不要加```json):
      {
          "Result":
              {
                  "score": 5498
              }
      }
-     ```
     """
     messages=[
         { "role": "system", "content": prompt_template },
@@ -239,6 +233,10 @@ def generate_hw04(question):
     ]
 
     llm = get_llm()
+
+    parser = JsonOutputParser()
     response = llm.invoke(messages)
-    print(response.content)
-    return response['output']
+    #res = parser.invoke(str(response.content))
+    res = str(response.content)
+    print(res)
+    return res
