@@ -44,7 +44,7 @@ def generate_hw01(question):
     llm = get_llm()
 
     prompt_template = """
-    你是台灣人，請回答台灣特定月份的紀念日有哪些，請按以下json格式呈現:
+    你是台灣人，請回答台灣特定月份的紀念日有哪些，請按以下json格式呈現(不要加```json):
      {
          "Result":
              {
@@ -82,7 +82,7 @@ def generate_hw02(question):
     tools = [get_memorial_days, ]
     llm_with_tools = llm.bind_tools(tools)
     prompt_template = """
-        你是一個厲害的助手, 但你不知道台灣的紀念日。請用中文並按以下json格式呈現結果:
+        你是一個厲害的助手, 但你不知道台灣的紀念日。請用中文並按以下json格式呈現結果(不要加```json):
         {
             "Result": [
                 {
@@ -149,7 +149,7 @@ def generate_hw03(question2, question3):
     generate_hw02(question2)
     llm = get_llm()
     prompt_template = """
-    你是一個厲害的助手, 請按以下json格式呈現:
+    你是一個厲害的助手, 請按以下json格式呈現(不要加```json):
     - add : 這是一個布林值，表示是否需要將節日新增到節日清單中。根據問題判斷該節日是否存在於清單中，如果不存在，則為 true；否則為 false。
     - reason : 描述為什麼需要或不需要新增節日，具體說明是否該節日已經存在於清單中，以及當前清單的內容。
      {
