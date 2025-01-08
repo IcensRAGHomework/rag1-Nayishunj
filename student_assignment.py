@@ -63,7 +63,7 @@ def generate_hw01(question):
 
     response = llm.invoke(messages)
     print(response.content)
-    return response
+    return response.content
 
 @tool
 def get_memorial_days(month):
@@ -139,6 +139,7 @@ def generate_hw02(question):
         config={"configurable": {"session_id": session_id}},
     )
     print(response['output'])
+    return response['output']
 
 def get_session_history(session_id: str) -> BaseChatMessageHistory:
     if session_id not in store:
@@ -191,6 +192,7 @@ def generate_hw03(question2, question3):
             config={"configurable": {"session_id": session_id}},
         )
     print(response['output'])
+    return response['output']
 
 def local_image_to_data_url(image_path):
     # Guess the MIME type of the image based on the file extension
@@ -239,3 +241,4 @@ def generate_hw04(question):
     llm = get_llm()
     response = llm.invoke(messages)
     print(response.content)
+    return response['output']
