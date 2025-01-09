@@ -44,13 +44,18 @@ def generate_hw01(question):
     llm = get_llm()
 
     prompt_template = """
-    你是台灣人，請回答台灣特定月份的紀念日有哪些，請按以下json格式呈現，且只保留一項(不要加```json):
+    你是台灣人，請回答台灣特定月份的紀念日有哪些，請按以下json格式呈現(不要加```json):
      {
-         "Result":
+         "Result": [
              {
-                 "date": "2024-09-05",
-                 "name": "测试日"
+                 "date": "2024-10-10",
+                 "name": "國慶日"
+             },
+             {
+                 "date": "2024-10-09",
+                 "name": "重陽節"
              }
+         ]
      }
     """
     messages = [
